@@ -1,0 +1,13 @@
+
+
+@mixin rndBorder () {
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@mixin titleFontStyle () {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
