@@ -10,4 +10,12 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
+
+  @media screen and (max-width: 1200px) {
+    font-size:10px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    letter-spacing: 0;
+  }
 }

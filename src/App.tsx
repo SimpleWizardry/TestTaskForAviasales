@@ -378,7 +378,7 @@ const App: React.FC = () => {
                 <img src={logo} alt='logo' />
             </div>
             <div className='container row main-content_holder'>
-                <div className='col s4 m4 l4'>
+                <div className='col s12 m4 l4'>
                     <div className='main-content_holder--input_block'>
                         <p>КОЛИЧЕСТВО ПЕРЕСАДОК</p>
                         <form>
@@ -402,7 +402,7 @@ const App: React.FC = () => {
                         </form>
                     </div>
                 </div>
-                <div className='col s8 m8 l8'>
+                <div className='col s12 m8 l8'>
                     <div className='row main-content_holder--filter_tabs'>
                         <ul className="tabs">
                             <li className="tab col s4">
@@ -411,7 +411,7 @@ const App: React.FC = () => {
                                     id='cheap'
                                     className={(filter === 'cheap') ? 'active' : ''}
                                 >
-                                    САМЫЙ ДЕШЕВЫЙ
+                                    <span>САМЫЙ ДЕШЕВЫЙ</span>
                                 </div>
                             </li>
                             <li className="tab col s4">

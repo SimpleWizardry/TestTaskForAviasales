@@ -19,8 +19,18 @@
   &-content_holder{
     width: 79%;
 
+    @media screen and (max-width: 1200px) {
+        width: 89%;
+      }
+
     .col {
       padding:0;
+
+      @media screen and (max-width: 1400px) {
+        &.l8 {
+          padding-left: 20px;
+        }
+      }
     }
 
     .row {
@@ -29,7 +39,7 @@
     }
 
     &--show-more_btn {
-      width: 502px;
+      max-width: 502px;
       height: 50px;
       background: $default-blue;
       justify-content: center;
@@ -48,7 +58,7 @@
     }
 
     &--input_block {
-      width: 232px;
+      max-width: 232px;
       height: 252px;
       //padding: 20px;
       @include rndBorder();
@@ -64,6 +74,9 @@
         height: 40px;
         margin: 0;
 
+        @media screen and (max-width: 760px) {
+          height: 36px;
+        }
       }
 
       form p:hover {
@@ -73,7 +86,7 @@
     }
 
     &--filter_tabs {
-      width: 502px;
+      max-width: 502px;
       height: 50px;
       overflow: hidden;
       @include rndBorder();
@@ -108,8 +121,8 @@
     }
 
     &--ticket {
-      width: 502px;
-      height: 184px;
+      max-width: 502px;
+      max-height: 184px;
       padding: 20px;
       @include rndBorder();
 
@@ -118,10 +131,13 @@
         margin-bottom: 10px;
 
         &_value {
-          font-family: $default-font;
           font-weight: 600;
           color: #4A4A4A;
           line-height: 21px; //?
+
+          @media screen and (max-width: 760px) {
+            font-size: 12px;
+          }
         }
 
         &_title {
@@ -136,12 +152,20 @@
         justify-content: space-between;
         align-items: center;
 
+        @media screen and (max-width: 760px) {
+          margin-bottom: 10px;
+        }
+
         .ticket-price {
           color: $default-blue;
           font-family: $default-font;
           font-size: 24px;
           line-height: 24px;
           font-weight: 600;
+
+          @media screen and (max-width: 760px) {
+            font-size: 22px;
+          }
         }
       }
     }
@@ -162,6 +186,14 @@
   letter-spacing: 0;
   line-height: 20px;
   color: #4A4A4A;
+
+  @media screen and (max-width: 993px) {
+    font-size: 12px;
+  }
+
+  @media screen and (max-width: 760px) {
+    font-size: 10px;
+  }
 }
 
 [type="checkbox"].filled-in:not(:checked)+span:not(.lever):after{
