@@ -12,8 +12,8 @@
 
 .main {
   max-width: 960px;
-  max-height: 1350px;
-  height: 80vh;
+  min-height: 1350px;
+  //height: 80vh;
   background: #F3F7FA;
 
   &-content_holder{
@@ -26,6 +26,25 @@
     .row {
       margin-left: auto;
       margin-right: 0;
+    }
+
+    &--show-more_btn {
+      width: 502px;
+      height: 50px;
+      background: $default-blue;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      @include titleFontStyle();
+      border-radius: 5px;
+      color: white;
+
+      &:hover {
+        color: $default-blue;
+        background: white;
+        cursor: pointer;
+        border: 1px solid $default-blue;
+      }
     }
 
     &--input_block {
@@ -67,15 +86,17 @@
         border-left:1px solid #DFE5EC;
         height: 50px;
 
-        a {
+        div {
           @include titleFontStyle();
           line-height: 52px;
           color: $default-blue;
           overflow: unset;
+          margin: 0;
 
           &:hover {
             color: white;
             background: #81c0f3;
+            cursor: pointer;
           }
 
           &.active {
