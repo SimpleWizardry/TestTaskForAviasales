@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import {Tabs} from './components/tabs/Tabs';
 import './App.scss';
 import logo from './img/Logo.png';
-//import s7logo from './img/S7 Logo.png'
 
 type TChecked = {
     [key: string] : boolean
 }
-
-//type CallbackFunction = () => void;
 
 interface ITicket {
     price: number;
@@ -83,7 +81,6 @@ const App: React.FC = () => {
 
     }, []);
 
-    //const memoArray = useMemo(() => sortBy(filter), [filteredTickets]);
 
 //ФОРМАТИРУЕМ НЕОБХОДИМОЕ КОЛИЧЕСТВО БИЛЕТОВ(отсортированных и отфильтрованных) ДЛЯ РЕНДЕРА
     useMemo(() => {
@@ -194,7 +191,6 @@ const App: React.FC = () => {
         //МОЖНО ДОБАВИТЬ ПРОВЕРКУ НА ДЛИНУ ФИЛЬТРОВАННОГО МАССИВА,ЕСЛИ ФИЛЬТРАЦИЯ ЕЩЕ НЕ ОСУЩЕСТВЛЯЛАСЬ,СОРТИРОВАТЬ ВЕСЬ МАССИВ БИЛЕТОВ
         let sortedArr = arrToSort;
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ПОПРАВИТЬ return
         if (filterName === 'cheap') {
             sortedArr.sort(function (prevTicket,nextTicket) {
                 return prevTicket.price - nextTicket.price
@@ -248,8 +244,6 @@ const App: React.FC = () => {
         }
 
         //ФИЛЬТРУЕМ ВСЕГДА ИЗНАЧАЛЬНЫЙ МАССИВ
-        //let arr = tickets;
-
         let filteredArr: ITickets = tickets.filter(function(ticket) {
             if (transfersAmount.length) {
                 return (transfersAmount.indexOf(ticket.segments[0].stops.length + ticket.segments[1].stops.length) !== -1)
@@ -306,40 +300,8 @@ const App: React.FC = () => {
         }
     },[url,stopSearch])
 
-    /*
-    // МОЖЕТ НЕ ПОНАДОБИТЬСЯ
-    //ХУК ДЭНА АБРАМОВА КОТОРЫЙ ПОДХОДИТ ДЛЯ ПОЛЛИНГА
-    function useInterval(callback: CallbackFunction , delay:number) {
-        const savedCallback = useRef();
-
-        // Remember the latest callback.
-        useEffect(() => {
-            savedCallback.current = callback;
-        }, [callback]);
-
-        // Set up the interval.
-        useEffect(() => {
-            function tick() {
-                savedCallback.current();
-            }
-            if (delay !== null) {
-                let id = setInterval(tick, delay);
-                return () => clearInterval(id);
-            }
-        }, [delay]);
-    }
-    //========================================================
-    */
-
-
-
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ПЕРЕПИСАТЬ ТАБЫ ПОД ФОРМУ
-    const clickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-        setFilter(e.target.id)
-    }
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setCheckedItems({...checkedItems, [e.target.name] : e.target.checked });
+    const switchFilter = (e: React.MouseEvent<HTMLDivElement>) => {
+        setFilter(e.currentTarget.id)
     }
 
     const checkboxes = [
@@ -379,130 +341,37 @@ const App: React.FC = () => {
             </div>
             <div className='container row main-content_holder'>
                 <div className='col s12 m4 l4'>
+
+
                     <div className='main-content_holder--input_block'>
                         <p>КОЛИЧЕСТВО ПЕРЕСАДОК</p>
                         <form>
                             {
                                 checkboxes.map(item => (
-                                    <p key={item.key}>
+                                    <p key={item.key} onClick = {() => setCheckedItems({...checkedItems, [item.name] : !checkedItems[item.name]})}>
                                         <label>
                                             <input
                                                 name={item.name}
                                                 className="checkbox-input filled-in"
                                                 type="checkbox"
                                                 checked={checkedItems[item.name]}
-                                                onChange={handleChange}
+                                                onClick={e => e.stopPropagation()}
                                             />
                                             <span>{item.label}</span>
                                         </label>
                                     </p>
                                 ))
-
                             }
                         </form>
                     </div>
+
                 </div>
                 <div className='col s12 m8 l8'>
-                    <div className='row main-content_holder--filter_tabs'>
-                        <ul className="tabs">
-                            <li className="tab col s4">
-                                <div
-                                    onClick={clickHandler}
-                                    id='cheap'
-                                    className={(filter === 'cheap') ? 'active' : ''}
-                                >
-                                    <span>САМЫЙ ДЕШЕВЫЙ</span>
-                                </div>
-                            </li>
-                            <li className="tab col s4">
-                                <div
-                                    onClick={clickHandler}
-                                    id='fast'
-                                    className={(filter === 'fast') ? 'active' : ''}
-                                >
-                                    САМЫЙ БЫСТРЫЙ
-                                </div>
-                            </li>
-                            <li className="tab col s4">
-                                <div
-                                    onClick={clickHandler}
-                                    id='optimal'
-                                    className={(filter === 'optimal') ? 'active' : ''}
-                                >
-                                    ОПТИМАЛЬНЫЙ
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
+                    <Tabs
+                        filter={filter}
+                        clickHandler={switchFilter}
+                    />
                         {ticketsList}
-                        {/*
-                        <div className='row main-content_holder--ticket__top-line'>
-                            <span className='ticket-price'>13 400 р</span>
-                            <div className='col l4'>
-                            </div>
-                            <img src={s7logo} alt='s7-logo' />
-                        </div>
-                        <div className='row ticket-info'>
-                            <div className='col s4 m4 l4'>
-                                <span className='ticket-info_title'>
-                                    MOW - HKT
-                                </span>
-                                <br />
-                                <span className='ticket-info_value'>
-                                    10:45 - 08:45
-                                </span>
-                            </div>
-                            <div className='col s4 m4 l4'>
-                                <span className='ticket-info_title'>
-                                    В ПУТИ
-                                </span>
-                                <br />
-                                <span className='ticket-info_value'>
-                                    21ч 15м
-                                </span>
-                            </div>
-                            <div className='col s4 m4 l4'>
-                                <span className='ticket-info_title'>
-                                    2 ПЕРЕСАДКИ
-                                </span>
-                                <br />
-                                <span className='ticket-info_value'>
-                                    HKG, JNB
-                                </span>
-                            </div>
-
-                        </div>
-                        <div className='row ticket-info'>
-                            <div className='col s4 m4 l4'>
-                                <span className='ticket-info_title'>
-                                    MOW - HKT
-                                </span>
-                                <br />
-                                <span className='ticket-info_value'>
-                                    10:45 - 08:45
-                                </span>
-                            </div>
-                            <div className='col s4 m4 l4'>
-                                <span className='ticket-info_title'>
-                                    В ПУТИ
-                                </span>
-                                <br />
-                                <span className='ticket-info_value'>
-                                    21ч 15м
-                                </span>
-                            </div>
-                            <div className='col s4 m4 l4'>
-                                <span className='ticket-info_title'>
-                                    2 ПЕРЕСАДКИ
-                                </span>
-                                <br />
-                                <span className='ticket-info_value'>
-                                    HKG, JNB
-                                </span>
-                            </div>
-                        </div>
-                        */}
                     {(filteredTickets.length) ? (<div onClick={() => setShowNext(prev => prev + 1)} className='row main-content_holder--show-more_btn'>ПОКАЗАТЬ БОЛЬШЕ</div>) : null
                     }
                 </div>
