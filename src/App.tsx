@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import {Tabs} from './components/tabs/Tabs';
 import './App.scss';
 import logo from './img/Logo.png';
+import {IFormattedTickets} from "./models/interfaces";
+import {TicketsList} from "./components/ticketsList/TicketsList";
 
 type TChecked = {
     [key: string] : boolean
@@ -28,30 +30,7 @@ interface ITicket {
     ]
 }
 
-interface IFormattedTicket {
-    id: number
-    price: string;
-    logo: string;
-    route: {
-        to: {
-            cities: string;
-            date: string;
-            duration: string;
-            transfers: string;
-            transferCities: string;
-        },
-        back: {
-            cities: string;
-            date: string;
-            duration: string;
-            transfers: string;
-            transferCities: string;
-        }
-    }
-}
-interface IFormattedTickets extends Array<IFormattedTicket> {}
 interface ITickets extends Array<ITicket> {}
-
 
 const App: React.FC = () => {
     const [checkedItems, setCheckedItems] = useState({
@@ -114,77 +93,7 @@ const App: React.FC = () => {
             }
         })
         setTicketsToRender(arrToRender)
-    }, [filteredTickets,showNext]);  //ПЕРЕРИСОВКА БУДЕТ ЗАВИСЕТЬ ТОЛЬКО ОТ ФИЛЬТРОВАННОГО МАССИВА
-
-    //РЕНДЕР ОТФОРМАТИРОВАННЫХ БИЛЕТОВ(вынести в презентационный компонент)
-    const ticketsList = ticketsToRender.map((ticket) =>
-        <div key={ticket.id} className='row main-content_holder--ticket'>
-            <div className='row main-content_holder--ticket__top-line'>
-                <span className='ticket-price'>{ticket.price}</span>
-                <div className='col l4'>
-                </div>
-                <img src={ticket.logo} alt='s7-logo' />
-            </div>
-            <div className='row ticket-info'>
-                <div className='col s4 m4 l4'>
-                    <span className='ticket-info_title'>
-                        {ticket.route.to.cities}
-                    </span>
-                    <br />
-                    <span className='ticket-info_value'>
-                        {ticket.route.to.date}
-                    </span>
-                </div>
-                <div className='col s4 m4 l4'>
-                    <span className='ticket-info_title'>
-                        В ПУТИ
-                    </span>
-                    <br />
-                    <span className='ticket-info_value'>
-                        {ticket.route.to.duration}
-                    </span>
-                </div>
-                <div className='col s4 m4 l4'>
-                    <span className='ticket-info_title'>
-                        {ticket.route.to.transfers}
-                    </span>
-                    <br />
-                    <span className='ticket-info_value'>
-                        {ticket.route.to.transferCities}
-                    </span>
-                </div>
-            </div>
-            <div className='row ticket-info'>
-                <div className='col s4 m4 l4'>
-                    <span className='ticket-info_title'>
-                        {ticket.route.back.cities}
-                    </span>
-                    <br />
-                    <span className='ticket-info_value'>
-                        {ticket.route.back.date}
-                    </span>
-                </div>
-                <div className='col s4 m4 l4'>
-                    <span className='ticket-info_title'>
-                        В ПУТИ
-                    </span>
-                    <br />
-                    <span className='ticket-info_value'>
-                        {ticket.route.back.duration}
-                    </span>
-                </div>
-                <div className='col s4 m4 l4'>
-                    <span className='ticket-info_title'>
-                        {ticket.route.back.transfers}
-                    </span>
-                    <br />
-                    <span className='ticket-info_value'>
-                        {ticket.route.back.transferCities}
-                    </span>
-                </div>
-            </div>
-        </div>
-    )
+    }, [filteredTickets,showNext]);  //ПЕРЕРИСОВКА БУДЕТ ЗАВИСЕТЬ ТОЛЬКО ОТ ФИЛЬТРОВАННОГО МАССИВА И ЗАПРОСА НО ПОКАЗ СЛЕДУЮЩИХ
 
 //ФУНКЦИЯ СОРТИРОВКИ
     const sortBy = (arrToSort: ITickets,filterName:string) => {
@@ -244,13 +153,16 @@ const App: React.FC = () => {
         }
 
         //ФИЛЬТРУЕМ ВСЕГДА ИЗНАЧАЛЬНЫЙ МАССИВ
-        let filteredArr: ITickets = tickets.filter(function(ticket) {
-            if (transfersAmount.length) {
+        let filteredArr: ITickets;
+
+        if (transfersAmount.length) {
+            filteredArr = tickets.filter(function(ticket) {
                 return (transfersAmount.indexOf(ticket.segments[0].stops.length + ticket.segments[1].stops.length) !== -1)
-            } else {
-                return true
-            }
-        })
+            })
+        } else {
+            filteredArr = tickets
+        }
+
 
         if (filter) {
             sortBy(filteredArr,filter)
@@ -271,7 +183,6 @@ const App: React.FC = () => {
         setTickets(tickets.concat(ticketsPack))
     },[ticketsPack.length]) //ПРИНИМАЕМ ПАЧКИ И ОБНОВЛЯЕМ ОБЩИЙ МАССИВ БИЛЕТОВ С КАЖДОЙ НОВОЙ ПАЧКОЙ
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ПРЕРВАТЬ СОЕДИНЕНИЕ ОКОНЧАТЕЛЬНО ПОСЛЕ ОТВЕТА STOP
     useEffect(() => {
         if (url) {
             const subscribe = async () => {
@@ -371,9 +282,14 @@ const App: React.FC = () => {
                         filter={filter}
                         clickHandler={switchFilter}
                     />
-                        {ticketsList}
+
+                    <TicketsList
+                        ticketsToRender = {ticketsToRender}
+                    />
+
                     {(filteredTickets.length) ? (<div onClick={() => setShowNext(prev => prev + 1)} className='row main-content_holder--show-more_btn'>ПОКАЗАТЬ БОЛЬШЕ</div>) : null
                     }
+
                 </div>
             </div>
         </div>
